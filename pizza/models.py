@@ -4,11 +4,17 @@ from generics.BaseModel import BaseModel
 from pizza.choices import DeliveryStatus
 
 
+class Ingredient(BaseModel):
+    name = models.CharField(max_length=100)
+
+
 class Pizza(BaseModel):
     name = models.CharField(max_length=100)
     base_price = models.DecimalField(max_digits=6, decimal_places=2)
     image_url = models.URLField(blank=True, null=True)
     quantity_in_stock = models.PositiveIntegerField(default=0)
+    description = models.TextField(blank=True)
+    ingredients = models.ManyToManyField(Ingredient, blank=True, related_name="pizzas")
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
@@ -29,7 +35,7 @@ class Order(BaseModel):
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     extras = models.ManyToManyField(Extra, blank=True)
     quantity = models.PositiveIntegerField(default=1)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     status = models.CharField(max_length=20, choices=DeliveryStatus, default="pending")
     customer_name = models.CharField(max_length=100)
     delivery_address = models.TextField()

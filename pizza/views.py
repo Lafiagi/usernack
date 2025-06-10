@@ -1,10 +1,14 @@
 from django.db.models import Q
 from rest_framework import viewsets, status
+
+from django_filters import rest_framework
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 from pizza.models import Pizza, Extra, Order
 from pizza.serializers import (
+    CalculateOrderAmountSerializer,
     PizzaSerializer,
     PizzaDetailSerializer,
     ExtraSerializer,
@@ -19,6 +23,8 @@ class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     queryset = Pizza.objects.filter(is_available=True)
+    filter_backends = [rest_framework.DjangoFilterBackend]
+    filterset_fields = ("name",)
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -36,6 +42,10 @@ class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
 
         return queryset
 
+    @extend_schema(
+        request=CalculateOrderAmountSerializer,
+        responses={200: CalculateOrderAmountSerializer},
+    )
     @action(detail=True, methods=["post"])
     def calculate_price(self, request, pk=None):
         """
@@ -90,7 +100,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     ViewSet for creating and managing orders
     """
 
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().prefetch_related("extras")
 
     def get_serializer_class(self):
         if self.action == "create":

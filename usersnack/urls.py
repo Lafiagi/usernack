@@ -11,7 +11,7 @@ from drf_spectacular.views import (
 VERSION = config("VERSION", default="v1", cast=str)
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(f"api/{VERSION}/pizza/", include("pizza.urls")),
+    path(f"api/{VERSION}/pizzas/", include("pizza.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",

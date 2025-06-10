@@ -2,7 +2,7 @@ from typing import List
 
 from rest_framework import serializers
 
-from pizza.models import Pizza, Extra, Order
+from pizza.models import Pizza, Extra, Order, Ingredient
 
 
 class ExtraSerializer(serializers.ModelSerializer):
@@ -12,7 +12,15 @@ class ExtraSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
 
 
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = ["id", "name"]
+
+
 class PizzaSerializer(serializers.ModelSerializer):
+    ingredients = IngredientSerializer(many=True, read_only=True)
+
     class Meta:
         model = Pizza
         fields = [
@@ -20,9 +28,30 @@ class PizzaSerializer(serializers.ModelSerializer):
             "name",
             "base_price",
             "image_url",
+            "ingredients",
             "created_at",
         ]
         read_only_fields = ("id", "created_at")
+
+
+class CalculateOrderAmountSerializer(serializers.Serializer):
+    extras = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        help_text="List of extra item IDs to include.",
+    )
+    quantity = serializers.IntegerField(
+        default=1, min_value=1, help_text="Quantity of the pizza."
+    )
+
+    pizza_id = serializers.IntegerField(read_only=True)
+    pizza_name = serializers.CharField(read_only=True)
+    base_price = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True
+    )
+    total_price = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True
+    )
 
 
 class PizzaDetailSerializer(serializers.ModelSerializer):
