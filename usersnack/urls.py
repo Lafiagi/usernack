@@ -1,27 +1,33 @@
-from django.contrib import admin
-from django.urls import path, include
-from decouple import config
+from django.urls import re_path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Snippets API",
+        default_version="v1",
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
-VERSION = config("VERSION", default="v1", cast=str)
-
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path(f"api//usersnack/{VERSION}/pizzas/", include("pizza.urls")),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path(
-        "api/schema/swagger-ui/",
-        SpectacularSwaggerView.as_view(url="/usersnack/api/schema/"),
-        name="swagger-ui",
+    re_path(
+        "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),
-    path(
-        "api/schema/redoc/",
-        SpectacularRedocView.as_view(url_name="schema"),
-        name="redoc",
+    re_path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
     ),
+    re_path(
+        "redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+    ),
+    re_path("", include("pizza.urls")),
 ]

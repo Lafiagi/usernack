@@ -21,7 +21,11 @@ SYSTEM_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-THIRD_PARTY_APPS = ["drf_spectacular", "rest_framework", "corsheaders"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "corsheaders",
+    "drf_yasg",
+]
 LOCAL_APPS = ["pizza"]
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -127,12 +131,3 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-SPECTACULAR_SETTINGS = {
-    "TITLE": "Usersnack Pizza API",
-    "DESCRIPTION": "API for Usersnack pizza delivery service",
-    "VERSION": "1.0.0",
-    "SERVE_INCLUDE_SCHEMA": False,
-    "SCHEMA_PATH_PREFIX_TRIM": True,
-}
-FORCE_SCRIPT_NAME = '/usersnack'
