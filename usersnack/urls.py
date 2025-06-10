@@ -9,6 +9,7 @@ from drf_spectacular.views import (
 )
 
 VERSION = config("VERSION", default="v1", cast=str)
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(f"api/{VERSION}/pizzas/", include("pizza.urls")),
