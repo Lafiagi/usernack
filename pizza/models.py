@@ -60,7 +60,6 @@ class Order(BaseModel):
                 pizza.is_available = False
             pizza.save(update_fields=["quantity_in_stock", "is_available"])
 
-            # Create order and calculate price
             if not self.total_price:
                 super().save(*args, **kwargs)
                 self.total_price = self.calculate_total_price()
@@ -69,7 +68,6 @@ class Order(BaseModel):
                 super().save(*args, **kwargs)
             
             for extra in self.extras.all():
-                # Deduct the quantity of the order for each extra
                 extra.quantity_in_stock = extra.quantity_in_stock - self.quantity
                 extra.save(update_fields=["quantity_in_stock"])
                 extra.refresh_from_db()
