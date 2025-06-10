@@ -6,14 +6,16 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title="UserSnack API",
         default_version="v1",
-        description="Test description",
+        description="API powering the new usersnack app",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
+        contact=openapi.Contact(email="contact@UserSnack.local"),
         license=openapi.License(name="BSD License"),
+        
     ),
     public=True,
+    url="https://api.ile-wa.com/usersnack",
     permission_classes=(permissions.AllowAny,),
 )
 
