@@ -134,3 +134,4 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+FORCE_SCRIPT_NAME = '/usersnack'
