@@ -133,5 +133,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API for Usersnack pizza delivery service",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX_TRIM": True,
 }
 FORCE_SCRIPT_NAME = '/usersnack'
