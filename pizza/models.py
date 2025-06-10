@@ -5,6 +5,9 @@ from generics.BaseModel import BaseModel
 from pizza.choices import DeliveryStatus
 
 
+class Ingredient(BaseModel):
+    name = models.CharField(max_length=100)
+
 class Pizza(BaseModel):
     name = models.CharField(max_length=100)
     base_price = models.DecimalField(max_digits=6, decimal_places=2)
