@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 
 from generics.BaseModel import BaseModel
 from pizza.choices import DeliveryStatus
@@ -19,6 +20,16 @@ class Pizza(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def reduce_stock(self, quantity):
+        if self.quantity_in_stock < quantity:
+            raise ValueError("Insufficient stock.")
+        self.quantity_in_stock = F("quantity_in_stock") - quantity
+        self.save(update_fields=["quantity_in_stock"])
+        self.refresh_from_db()
+        if self.quantity_in_stock <= 0:
+            self.is_available = False
+            self.save(update_fields=["is_available"])
 
 
 class Extra(BaseModel):
