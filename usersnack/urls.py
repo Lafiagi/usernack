@@ -15,7 +15,6 @@ schema_view = get_schema_view(
         
     ),
     public=True,
-    url="https://api.ile-wa.com/usersnack",
     permission_classes=(permissions.AllowAny,),
 )
 
