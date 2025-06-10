@@ -104,7 +104,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         return value
 
     def validate_pizza(self, value):
-        if not value.is_available:
+        if not value.is_available or value.quantity_in_stock <=0:
             raise serializers.ValidationError("This pizza is currently unavailable")
         return value
 
