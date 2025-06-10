@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY", default="django-insecure-change-me-in-production")
 
 DEBUG = config("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = ["0.0.0.0", ""]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 # Application definition
 
