@@ -3,9 +3,9 @@ from rest_framework.routers import DefaultRouter
 from pizza.views import PizzaViewSet, ExtraViewSet, OrderViewSet
 
 router = DefaultRouter()
-router.register(r"pizzas", PizzaViewSet)
-router.register(r"extras", ExtraViewSet)
-router.register(r"orders", OrderViewSet)
+router.register(r"pizza", PizzaViewSet)
+router.register(r"extra", ExtraViewSet)
+router.register(r"order", OrderViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
