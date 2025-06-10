@@ -36,9 +36,7 @@ class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
         search = self.request.query_params.get("search", None)
 
         if search:
-            queryset = queryset.filter(
-                Q(name__icontains=search) | Q(description__icontains=search)
-            )
+            queryset = queryset.filter(Q(name__icontains=search))
 
         return queryset
 
