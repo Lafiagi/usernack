@@ -5,6 +5,7 @@ from rest_framework import serializers
 from pizza.models import Pizza, Extra, Order, Ingredient
 
 
+
 class ExtraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Extra
@@ -84,6 +85,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
+            "id",
             "pizza",
             "extras",
             "quantity",
@@ -91,6 +93,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             "delivery_address",
             "calculated_total",
         ]
+        read_only_fields = ("id", "created_at")
 
     def get_calculated_total(self, obj) -> float:
         if obj.pk:
@@ -100,11 +103,10 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     def validate_quantity(self, value):
         if value < 1:
             raise serializers.ValidationError("Quantity must be at least 1")
-
         return value
 
     def validate_pizza(self, value):
-        if not value.is_available or value.quantity_in_stock <=0:
+        if not value.is_available or value.quantity_in_stock <= 0:
             raise serializers.ValidationError("This pizza is currently unavailable")
         return value
 
@@ -116,6 +118,29 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 f"These extras are unavailable: {', '.join(names)}"
             )
         return value
+
+    def validate(self, attrs):
+        pizza = attrs.get("pizza")
+        extras = attrs.get("extras", [])
+        quantity = attrs.get("quantity", 1)
+
+        # Ensure enough pizza in stock
+        if pizza and pizza.quantity_in_stock < quantity:
+            raise serializers.ValidationError(
+                f"Only {pizza.quantity_in_stock} pizzas left in stock."
+            )
+
+        # Ensure enough of each extra in stock
+        low_stock_extras = [
+            extra for extra in extras if extra.quantity_in_stock < quantity
+        ]
+        if low_stock_extras:
+            names = [extra.name for extra in low_stock_extras]
+            raise serializers.ValidationError(
+                f"Insufficient stock for extras: {', '.join(names)}"
+            )
+
+        return attrs
 
 
 class OrderSerializer(serializers.ModelSerializer):
