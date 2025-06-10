@@ -31,5 +31,5 @@ urlpatterns = [
     re_path(
         "redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
-    re_path("", include("pizza.urls")),
+    re_path("usersnack/", include("pizza.urls")),
 ]
