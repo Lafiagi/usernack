@@ -33,5 +33,5 @@ urlpatterns = [
     re_path(
         "redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
-    re_path("api/", include("pizza.urls")),
+    re_path(f"api/{VERSION}/", include("pizza.urls")),
 ]
