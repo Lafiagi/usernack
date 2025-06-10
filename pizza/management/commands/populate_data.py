@@ -1,12 +1,12 @@
 from django.core.management.base import BaseCommand
-from pizza.models import Pizza, Extra, Ingridient  # Import Ingridient
+from pizza.models import Pizza, Extra, Ingredient  # Import Ingredient
 
 
 class Command(BaseCommand):
     help = "Populate database with sample pizza, extra, and ingredient data"
 
     def handle(self, *args, **options):
-        self.stdout.write("--- Populating Ingridients ---")
+        self.stdout.write("--- Populating Ingredients ---")
         # Create ingredients
         ingredients_data = [
             {"name": "Dough"},
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         # Store created ingredient objects to link them to pizzas later
         created_ingredients = {}
         for ing_data in ingredients_data:
-            ing, created = Ingridient.objects.get_or_create(
+            ing, created = Ingredient.objects.get_or_create(
                 name=ing_data["name"], defaults=ing_data
             )
             created_ingredients[ing.name] = ing  # Store the object
