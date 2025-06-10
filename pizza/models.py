@@ -33,7 +33,7 @@ class Order(BaseModel):
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     extras = models.ManyToManyField(Extra, blank=True)
     quantity = models.PositiveIntegerField(default=1)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.0)
     status = models.CharField(max_length=20, choices=DeliveryStatus, default="pending")
     customer_name = models.CharField(max_length=100)
     delivery_address = models.TextField()
