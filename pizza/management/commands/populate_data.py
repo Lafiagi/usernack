@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from pizza.models import Pizza, Extra, Ingredient  # Import Ingredient
+from pizza.models import Pizza, Extra, Ingredient
 
 
 class Command(BaseCommand):
