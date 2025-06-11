@@ -4,7 +4,8 @@ from rest_framework import viewsets, status
 from django_filters import rest_framework
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from pizza.models import Pizza, Extra, Order
 from pizza.serializers import (
@@ -32,8 +33,9 @@ class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(Q(name__icontains=search))
         return queryset
 
-    @extend_schema(
-        request=CalculateOrderAmountSerializer,
+    @swagger_auto_schema(
+        method="post",
+        request_body=CalculateOrderAmountSerializer,
         responses={200: CalculateOrderAmountSerializer},
     )
     @action(detail=True, methods=["post"])
