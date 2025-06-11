@@ -17,7 +17,7 @@ SYSTEM_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-THIRD_PARTY_APPS = ["drf_spectacular", "rest_framework"]
+THIRD_PARTY_APPS = ["drf_yasg", "rest_framework"]
 LOCAL_APPS = ["pizza"]
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -80,3 +80,4 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+FORCE_SCRIPT_NAME = "/usersnack"
