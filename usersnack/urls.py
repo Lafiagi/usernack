@@ -14,7 +14,6 @@ schema_view = get_schema_view(
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="contact@UserSnack.local"),
         license=openapi.License(name="BSD License"),
-        
     ),
     public=True,
     url="https://api.ile-wa.com/usersnack",
