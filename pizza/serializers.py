@@ -5,7 +5,6 @@ from rest_framework import serializers
 from pizza.models import Pizza, Extra, Order, Ingredient
 
 
-
 class ExtraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Extra
