@@ -14,6 +14,8 @@ class Pizza(BaseModel):
     base_price = models.DecimalField(max_digits=6, decimal_places=2)
     image_url = models.URLField(blank=True, null=True)
     quantity_in_stock = models.PositiveIntegerField(default=0)
+    ingredients = models.ManyToManyField(Ingredient, blank=True)
+    description = models.TextField(blank=True, null=True)
     is_available = models.BooleanField(default=True)
 
     def __str__(self):

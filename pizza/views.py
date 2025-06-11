@@ -18,26 +18,18 @@ from pizza.serializers import (
 
 
 class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet for listing and retrieving pizzas
-    """
-
-    queryset = Pizza.objects.filter(is_available=True)
+    queryset = Pizza.objects.filter(is_available=True).prefetch_related("ingredients")
     filter_backends = [rest_framework.DjangoFilterBackend]
     filterset_fields = ("name",)
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
-            return PizzaDetailSerializer
-        return PizzaSerializer
+        return PizzaDetailSerializer if self.action == "retrieve" else PizzaSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        search = self.request.query_params.get("search", None)
-
+        queryset = self.queryset
+        search = self.request.query_params.get("search")
         if search:
             queryset = queryset.filter(Q(name__icontains=search))
-
         return queryset
 
     @extend_schema(
@@ -46,9 +38,6 @@ class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
     )
     @action(detail=True, methods=["post"])
     def calculate_price(self, request, pk=None):
-        """
-        Calculate total price for a pizza with selected extras
-        """
         pizza = self.get_object()
         extras_ids = request.data.get("extras", [])
         quantity = request.data.get("quantity", 1)
@@ -62,13 +51,16 @@ class PizzaViewSet(viewsets.ReadOnlyModelViewSet):
                 )
         except (ValueError, TypeError):
             return Response(
-                {"error": "Invalid quantity"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Invalid quantity"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         total_price = pizza.base_price * quantity
 
         if extras_ids:
-            extras = Extra.objects.filter(id__in=extras_ids, is_available=True)
+            extras = Extra.objects.filter(
+                id__in=set(extras_ids), is_available=True
+            ).only("price")
             extras_price = sum(extra.price for extra in extras) * quantity
             total_price += extras_price
 
@@ -98,7 +90,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     ViewSet for creating and managing orders
     """
 
-    queryset = Order.objects.all().prefetch_related("extras")
+    queryset = Order.objects.select_related("pizza").prefetch_related("extras")
 
     def get_serializer_class(self):
         if self.action == "create":
