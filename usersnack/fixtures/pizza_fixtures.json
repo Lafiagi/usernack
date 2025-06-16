@@ -1,0 +1,136 @@
+{
+    "ingredients": [
+        {
+            "name": "Dough"
+        },
+        {
+            "name": "Tomato Sauce"
+        },
+        {
+            "name": "Mozzarella Cheese"
+        },
+        {
+            "name": "Fresh Basil"
+        },
+        {
+            "name": "Pepperoni Slices"
+        },
+        {
+            "name": "Mushrooms"
+        },
+        {
+            "name": "Cooked Ham"
+        },
+        {
+            "name": "Artichoke Hearts"
+        },
+        {
+            "name": "Black Olives"
+        },
+        {
+            "name": "Pineapple Chunks"
+        },
+        {
+            "name": "Onions"
+        },
+        {
+            "name": "Bell Peppers"
+        }
+    ],
+    "pizzas": [
+        {
+            "name": "Margherita",
+            "description": "Classic pizza with tomato sauce, mozzarella, and fresh basil",
+            "base_price": 12.99,
+            "image_url": "https://example.com/margherita.jpg",
+            "ingredients": [
+                "Dough",
+                "Tomato Sauce",
+                "Mozzarella Cheese",
+                "Fresh Basil"
+            ]
+        },
+        {
+            "name": "Pepperoni",
+            "description": "Delicious pepperoni with mozzarella cheese and tomato sauce",
+            "base_price": 15.99,
+            "image_url": "https://example.com/pepperoni.jpg",
+            "ingredients": [
+                "Dough",
+                "Tomato Sauce",
+                "Mozzarella Cheese",
+                "Pepperoni Slices"
+            ]
+        },
+        {
+            "name": "Quattro Stagioni",
+            "description": "Four seasons pizza with mushrooms, ham, artichokes, and olives",
+            "base_price": 18.99,
+            "image_url": "https://example.com/quattro.jpg",
+            "ingredients": [
+                "Dough",
+                "Tomato Sauce",
+                "Mozzarella Cheese",
+                "Mushrooms",
+                "Cooked Ham",
+                "Artichoke Hearts",
+                "Black Olives"
+            ]
+        },
+        {
+            "name": "Hawaiian",
+            "description": "Tropical pizza with ham, pineapple, and mozzarella",
+            "base_price": 16.99,
+            "image_url": "https://example.com/hawaiian.jpg",
+            "ingredients": [
+                "Dough",
+                "Tomato Sauce",
+                "Mozzarella Cheese",
+                "Cooked Ham",
+                "Pineapple Chunks"
+            ]
+        }
+    ],
+    "extras": [
+        {
+            "name": "Extra Cheese",
+            "price": 2.50
+        },
+        {
+            "name": "Pepperoni",
+            "price": 3.00
+        },
+        {
+            "name": "Mushrooms",
+            "price": 2.00
+        },
+        {
+            "name": "Olives",
+            "price": 1.50
+        },
+        {
+            "name": "Bell Peppers",
+            "price": 2.00
+        },
+        {
+            "name": "Onions",
+            "price": 1.50
+        },
+        {
+            "name": "Ham",
+            "price": 3.50
+        },
+        {
+            "name": "Sausage",
+            "price": 3.00
+        },
+        {
+            "name": "Bacon",
+            "price": 3.50
+        },
+        {
+            "name": "Anchovies",
+            "price": 2.50
+        }
+    ]
+}
