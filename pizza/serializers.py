@@ -56,6 +56,7 @@ class CalculateOrderAmountSerializer(serializers.Serializer):
 
 class PizzaDetailSerializer(serializers.ModelSerializer):
     available_extras = serializers.SerializerMethodField()
+    ingredients = IngredientSerializer(many=True, read_only=True)
 
     class Meta:
         model = Pizza
@@ -67,8 +68,9 @@ class PizzaDetailSerializer(serializers.ModelSerializer):
             "is_available",
             "available_extras",
             "created_at",
+            "ingredients"
         ]
-        read_only_fields = ("id", "created_at")
+        read_only_fields = ("id", "created_at",)
 
     def get_available_extras(self, _) -> List[Extra]:
         extras = Extra.objects.filter(is_available=True)
