@@ -1,35 +1,39 @@
+import json
+import os
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from pizza.models import Pizza, Extra, Ingredient
 
 
 class Command(BaseCommand):
-    help = "Populate database with sample pizza, extra, and ingredient data"
+    help = "Populate database with sample pizza, extra, and ingredient data from JSON fixtures"
 
     def handle(self, *args, **options):
+        # Load JSON data
+        fixtures_path = os.path.join(
+            settings.BASE_DIR, "fixtures", "pizza_fixtures.json"
+        )
+
+        try:
+            with open(fixtures_path, "r") as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            self.stdout.write(
+                self.style.ERROR(f"Fixtures file not found at {fixtures_path}")
+            )
+            return
+        except json.JSONDecodeError as e:
+            self.stdout.write(self.style.ERROR(f"Invalid JSON in fixtures file: {e}"))
+            return
+
         self.stdout.write("--- Populating Ingredients ---")
         # Create ingredients
-        ingredients_data = [
-            {"name": "Dough"},
-            {"name": "Tomato Sauce"},
-            {"name": "Mozzarella Cheese"},
-            {"name": "Fresh Basil"},
-            {"name": "Pepperoni Slices"},
-            {"name": "Mushrooms"},
-            {"name": "Cooked Ham"},
-            {"name": "Artichoke Hearts"},
-            {"name": "Black Olives"},
-            {"name": "Pineapple Chunks"},
-            {"name": "Onions"},
-            {"name": "Bell Peppers"},
-        ]
-
-        # Store created ingredient objects to link them to pizzas later
         created_ingredients = {}
-        for ing_data in ingredients_data:
+        for ing_data in data.get("ingredients", []):
             ing, created = Ingredient.objects.get_or_create(
                 name=ing_data["name"], defaults=ing_data
             )
-            created_ingredients[ing.name] = ing  # Store the object
+            created_ingredients[ing.name] = ing
             if created:
                 self.stdout.write(f"Created ingredient: {ing.name}")
             else:
@@ -37,62 +41,7 @@ class Command(BaseCommand):
 
         self.stdout.write("\n--- Populating Pizzas ---")
         # Create pizzas with ingredients
-        pizzas_data = [
-            {
-                "name": "Margherita",
-                "description": "Classic pizza with tomato sauce, mozzarella, and fresh basil",
-                "base_price": 12.99,
-                "image_url": "https://example.com/margherita.jpg",
-                "ingredients": [
-                    "Dough",
-                    "Tomato Sauce",
-                    "Mozzarella Cheese",
-                    "Fresh Basil",
-                ],
-            },
-            {
-                "name": "Pepperoni",
-                "description": "Delicious pepperoni with mozzarella cheese and tomato sauce",
-                "base_price": 15.99,
-                "image_url": "https://example.com/pepperoni.jpg",
-                "ingredients": [
-                    "Dough",
-                    "Tomato Sauce",
-                    "Mozzarella Cheese",
-                    "Pepperoni Slices",
-                ],
-            },
-            {
-                "name": "Quattro Stagioni",
-                "description": "Four seasons pizza with mushrooms, ham, artichokes, and olives",
-                "base_price": 18.99,
-                "image_url": "https://example.com/quattro.jpg",
-                "ingredients": [
-                    "Dough",
-                    "Tomato Sauce",
-                    "Mozzarella Cheese",
-                    "Mushrooms",
-                    "Cooked Ham",
-                    "Artichoke Hearts",
-                    "Black Olives",
-                ],
-            },
-            {
-                "name": "Hawaiian",
-                "description": "Tropical pizza with ham, pineapple, and mozzarella",
-                "base_price": 16.99,
-                "image_url": "https://example.com/hawaiian.jpg",
-                "ingredients": [
-                    "Dough",
-                    "Tomato Sauce",
-                    "Mozzarella Cheese",
-                    "Cooked Ham",
-                    "Pineapple Chunks",
-                ],
-            },
-        ]
-
-        for pizza_data in pizzas_data:
+        for pizza_data in data.get("pizzas", []):
             # Extract ingredients list before creating/getting the pizza
             ingredient_names = pizza_data.pop("ingredients", [])
 
@@ -108,8 +57,7 @@ class Command(BaseCommand):
                     f"Pizza '{pizza.name}' already exists. Updating ingredients."
                 )
 
-            # Clear existing ingredients if the pizza wasn't just created, to avoid duplicates
-            # and ensure the command is idempotent.
+            # Clear existing ingredients if the pizza wasn't just created
             if not created:
                 pizza.ingredients.clear()
 
@@ -123,24 +71,11 @@ class Command(BaseCommand):
                             f"Ingredient '{ing_name}' not found for pizza '{pizza.name}'. Skipping."
                         )
                     )
-            pizza.save()  # Save the pizza after adding ingredients
+            pizza.save()
 
         self.stdout.write("\n--- Populating Extras ---")
         # Create extras
-        extras_data = [
-            {"name": "Extra Cheese", "price": 2.50},
-            {"name": "Pepperoni", "price": 3.00},
-            {"name": "Mushrooms", "price": 2.00},
-            {"name": "Olives", "price": 1.50},
-            {"name": "Bell Peppers", "price": 2.00},
-            {"name": "Onions", "price": 1.50},
-            {"name": "Ham", "price": 3.50},
-            {"name": "Sausage", "price": 3.00},
-            {"name": "Bacon", "price": 3.50},
-            {"name": "Anchovies", "price": 2.50},
-        ]
-
-        for extra_data in extras_data:
+        for extra_data in data.get("extras", []):
             extra, created = Extra.objects.get_or_create(
                 name=extra_data["name"], defaults=extra_data
             )
